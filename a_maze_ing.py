@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 from src.validation import ConfigError, Config, get_config
-
+from src.maze.cell import Cell
 
 def read_file(file: str) -> list[str]:
     with open(file, "r") as f:

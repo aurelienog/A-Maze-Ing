@@ -18,6 +18,7 @@ class MazeGenerator():
         that neighbor, and then recurse with that neighbor as the current cell.
         """
 
+        matrix: list[list[Cell]] = [[Cell(row, col) for col in range(width)] for row in range(height)]
         if self.seed is not None:
             ...
         else:

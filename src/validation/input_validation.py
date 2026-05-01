@@ -153,7 +153,7 @@ def get_config(content: list[str]) -> Config:
         content (list[str]): List of raw configuration lines.
 
     Returns:
-        dict: Validated configuration dictionary.
+        Config: A configuration object with correctly typed values.
 
     Raises:
         ConfigError: If parsing or validation errors are encountered.

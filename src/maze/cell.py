@@ -9,7 +9,9 @@ class Direction(str, Enum):
 
 
 class Cell():
-    def __init__(self) -> None:
+    def __init__(self, row: int, col: int) -> None:
+        self.row = row
+        self.col = col
         self.walls = {
             Direction.TOP: True,
             Direction.RIGHT: True,
@@ -20,3 +22,6 @@ class Cell():
 
     def remove_wall(self, direction: Direction) -> None:
         self.walls[direction] = False
+
+    def __repr__(self):
+        return "[X]"
