@@ -16,7 +16,7 @@ all: install run
 # --------------------------
 
 venv:
-	python3 -m venv $(VENV)
+	python3.10 -m venv $(VENV)
 
 # --------------------------
 # INSTALL
