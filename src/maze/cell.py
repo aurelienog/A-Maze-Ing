@@ -54,9 +54,9 @@ class Cell():
     def get_direction(self, next_cell: "Cell") -> Direction:
         if self.col == next_cell.col:
             if self.row > next_cell.row:
-                return Direction.BOTTOM
-            else:
                 return Direction.TOP
+            else:
+                return Direction.BOTTOM
         elif self.row == next_cell.row:
             if self.col > next_cell.col:
                 return Direction.LEFT
