@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import sys
 from src.validation import ConfigError, Config, get_config
-from src.maze.cell import Cell
+from src.maze import MazeGenerator
+
 
 def read_file(file: str) -> list[str]:
     with open(file, "r") as f:
@@ -31,8 +32,9 @@ def main() -> None:
     except ConfigError as e:
         print(f"\n[CONFIG ERROR] Mandatory configuration is invalid:\n{e}")
         sys.exit(1)
-
-    print(config)
+    generator = MazeGenerator()
+    maze = generator.generate_DFS_maze(config["WIDTH"], config["HEIGHT"])
+    print(maze)
 
 
 if __name__ == "__main__":

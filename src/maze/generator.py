@@ -1,6 +1,7 @@
 from .maze import Maze
-from .cell import Cell, Direction
-from random import random
+from .cell import Cell
+import random
+
 
 class MazeGenerator():
     def __init__(self, seed=None) -> None:
@@ -17,35 +18,27 @@ class MazeGenerator():
         If that neighbor hasn't been visited, remove the wall between this cell and
         that neighbor, and then recurse with that neighbor as the current cell.
         """
-        matrix: list[list[Cell]] = [[Cell(row, col) for col in range(width)] for row in range(height)]
 
+        matrix: list[list[Cell]] = [[Cell(row, col) for col in range(width)]
+                                    for row in range(height)]
         line = random.choice(matrix)
         current_cell = random.choice(line)
-        current_cell.visited = True
 
-        neighbors = current_cell.get_unvisited_neighbors(matrix)
+        def build(current_cell: Cell) -> None:
+            current_cell.visited = True
+            unvisited_neighbors = current_cell.get_unvisited_neighbors(matrix)
+            random.shuffle(unvisited_neighbors)
 
-        if len(neighbors) > 0:
-            next_cell = random.choice(neighbors)
+            for neighbor in unvisited_neighbors:
+                if not neighbor.visited:
+                    next_cell = neighbor
+                    direction_next_cell = Cell.get_direction(current_cell, next_cell)
+                    Cell.connect_cells(direction_next_cell, current_cell, next_cell)
+                    build(next_cell)
 
-        next_cell_position = 
-        match next_cell_position:
-        
-            case Direction.BOTTOM: 
-                current_cell.remove_wall(current_cell[Direction.TOP])
-                next_cell.remove_wall(current_cell[Direction.BOTTOM])
-            case Direction.LEFT:
-                current_cell.remove_wall(current_cell[Direction.RIGHT])
-                next_cell.remove_wall(current_cell[Direction.LEFT])
-            case Direction.TOP:
-                current_cell.remove_wall(current_cell[Direction.BOTTOM])
-                next_cell.remove_wall(current_cell[Direction.TOP])
-            case Direction.RIGHT:
-                current_cell.remove_wall(current_cell[Direction.LEFT])
-                next_cell.remove_wall(current_cell[Direction.RIGHT])
-        
+        build(current_cell)
         # if self.seed is not None:
         #     ...
         # else:
         #     ...
-        return Maze(...)
+        return Maze(matrix, width, height)
