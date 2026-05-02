@@ -51,33 +51,32 @@ class Cell():
     def remove_wall(self, direction: Direction) -> None:
         self.walls[direction] = False
 
-    @staticmethod
-    def get_direction(current_cell: "Cell", next_cell: "Cell") -> Direction:
-        if current_cell.col == next_cell.col:
-            if current_cell.row > next_cell.row:
+    def get_direction(self, next_cell: "Cell") -> Direction:
+        if self.col == next_cell.col:
+            if self.row > next_cell.row:
                 return Direction.BOTTOM
             else:
                 return Direction.TOP
-        elif current_cell.row == next_cell.row:
-            if current_cell.col > next_cell.col:
+        elif self.row == next_cell.row:
+            if self.col > next_cell.col:
                 return Direction.LEFT
             else:
                 return Direction.RIGHT
         else:
             raise CellError("Error while comparing position")
 
-    @staticmethod
-    def connect_cells(direction: Direction, cell1: "Cell", cell2: "Cell") -> None:
+    def connect_cells(self, cell2: "Cell") -> None:
+        direction = self.get_direction(cell2)
         match direction:
             case Direction.TOP:
-                cell1.remove_wall(Direction.TOP)
+                self.remove_wall(Direction.TOP)
                 cell2.remove_wall(Direction.BOTTOM)
             case Direction.RIGHT:
-                cell1.remove_wall(Direction.RIGHT)
+                self.remove_wall(Direction.RIGHT)
                 cell2.remove_wall(Direction.LEFT)
             case Direction.BOTTOM:
-                cell1.remove_wall(Direction.BOTTOM)
+                self.remove_wall(Direction.BOTTOM)
                 cell2.remove_wall(Direction.TOP)
             case Direction.LEFT:
-                cell1.remove_wall(Direction.LEFT)
+                self.remove_wall(Direction.LEFT)
                 cell2.remove_wall(Direction.RIGHT)

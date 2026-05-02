@@ -32,8 +32,7 @@ class MazeGenerator():
             for neighbor in unvisited_neighbors:
                 if not neighbor.visited:
                     next_cell = neighbor
-                    direction_next_cell = Cell.get_direction(current_cell, next_cell)
-                    Cell.connect_cells(direction_next_cell, current_cell, next_cell)
+                    current_cell.connect_cells(next_cell)
                     build(next_cell)
 
         build(current_cell)
