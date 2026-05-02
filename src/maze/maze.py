@@ -15,30 +15,34 @@ class Maze():
         for row in self.matrix:
             top_line = "+"
             middle_line = ""
+            bottom_line = "+"
 
             for cell in row:
-                # --- pared superior
+                # --- top wall
                 if cell.walls[Direction.TOP]:
                     top_line += "---+"
                 else:
                     top_line += "   +"
 
-                # --- pared izquierda
+                # --- left wall
                 if cell.walls[Direction.LEFT]:
-                    middle_line += "|   "
+                    middle_line += "|"
                 else:
-                    middle_line += "    "
+                    middle_line += " "
+                
+                middle_line += "   "
 
-            # cerrar derecha de la fila
+                # --- bottom wall
+                if cell.walls[Direction.BOTTOM]:
+                    bottom_line += "---+"
+                else:
+                    bottom_line += "   +"
+
+            # close right wall
             middle_line += "|"
 
             maze.append(top_line)
             maze.append(middle_line)
-
-        # línea inferior del laberinto
-        bottom = "+"
-        for cell in self.matrix[-1]:
-            bottom += "---+"
-        maze.append(bottom)
+            maze.append(bottom_line)
 
         return "\n".join(maze)
