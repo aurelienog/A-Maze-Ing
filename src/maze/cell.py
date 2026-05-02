@@ -24,7 +24,7 @@ class Cell():
         }
         self.visited = False
 
-    def get_neighbors(self, matrix) -> list["Cell"]:
+    def get_neighbors(self, matrix: list[list["Cell"]]) -> list["Cell"]:
         neighbors = []
         if self.col > 0:
             left_neighbor = matrix[self.row][self.col - 1]

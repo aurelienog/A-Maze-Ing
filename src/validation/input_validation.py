@@ -158,11 +158,11 @@ def get_config(content: list[str]) -> Config:
     Raises:
         ConfigError: If parsing or validation errors are encountered.
     """
-    config, errors = parse_config(content)
-    errors += get_validation_errors(config)
+    raw_config, errors = parse_config(content)
+    errors += get_validation_errors(raw_config)
 
     if errors:
         raise ConfigError("\n".join(errors))
-    config = cast_config(config)
+    config = cast_config(raw_config)
 
     return config

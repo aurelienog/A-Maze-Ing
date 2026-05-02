@@ -1,15 +1,15 @@
-from .cell import Direction
+from .cell import Direction, Cell
 
 
 class Maze():
-    def __init__(self, matrix, width: int, height: int) -> None:
+    def __init__(self, matrix: list[list[Cell]], width: int, height: int) -> None:
         self.matrix = matrix
         self.width = width
         self.height = height
         # self.entry = entry
         # self.exit = exit
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         maze: list[str] = []
 
         for row in self.matrix:
@@ -29,13 +29,11 @@ class Maze():
 
                 middle_line += "   "
 
-            # close right wall
             middle_line += "|"
 
             maze.append(top_line)
             maze.append(middle_line)
 
-        # bottom line of maze
         bottom = "+"
         for cell in self.matrix[-1]:
             bottom += "---+"

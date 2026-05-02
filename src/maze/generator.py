@@ -4,10 +4,10 @@ import random
 
 
 class MazeGenerator():
-    def __init__(self, seed=None) -> None:
+    def __init__(self, seed: int | None = None) -> None:
         self.seed = seed
 
-    def generate_DFS_maze(self, width, height):
+    def generate_DFS_maze(self, width: int, height: int) -> Maze:
         """
         Generate and show a maze, using the simple Depth-first search algorithm.
 
