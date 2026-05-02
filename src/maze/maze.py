@@ -12,23 +12,21 @@ class Maze():
     def __repr__(self):
         maze: list[str] = []
 
-        for row_idx, row in enumerate(self.matrix):
+        for row in self.matrix:
             top_line = "+"
             middle_line = ""
 
             for cell in row:
-                # --- top wall
                 if cell.walls[Direction.TOP]:
                     top_line += "---+"
                 else:
                     top_line += "   +"
 
-                # --- left wall
                 if cell.walls[Direction.LEFT]:
                     middle_line += "|"
                 else:
                     middle_line += " "
-                
+
                 middle_line += "   "
 
             # close right wall
