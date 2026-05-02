@@ -12,10 +12,9 @@ class Maze():
     def __repr__(self):
         maze: list[str] = []
 
-        for row in self.matrix:
+        for row_idx, row in enumerate(self.matrix):
             top_line = "+"
             middle_line = ""
-            bottom_line = "+"
 
             for cell in row:
                 # --- top wall
@@ -32,17 +31,16 @@ class Maze():
                 
                 middle_line += "   "
 
-                # --- bottom wall
-                if cell.walls[Direction.BOTTOM]:
-                    bottom_line += "---+"
-                else:
-                    bottom_line += "   +"
-
             # close right wall
             middle_line += "|"
 
             maze.append(top_line)
             maze.append(middle_line)
-            maze.append(bottom_line)
+
+        # bottom line of maze
+        bottom = "+"
+        for cell in self.matrix[-1]:
+            bottom += "---+"
+        maze.append(bottom)
 
         return "\n".join(maze)
