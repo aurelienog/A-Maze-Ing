@@ -33,7 +33,8 @@ def main() -> None:
         print(f"\n[CONFIG ERROR] Mandatory configuration is invalid:\n{e}")
         sys.exit(1)
     generator = MazeGenerator()
-    maze = generator.generate_DFS_maze(config["WIDTH"], config["HEIGHT"])
+    maze = generator.generate_DFS_maze(config["WIDTH"], config["HEIGHT"],
+                                       config["ENTRY"], config["EXIT"])
     print(maze)
 
 

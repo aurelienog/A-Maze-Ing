@@ -7,7 +7,8 @@ class MazeGenerator():
     def __init__(self, seed: int | None = None) -> None:
         self.seed = seed
 
-    def generate_DFS_maze(self, width: int, height: int) -> Maze:
+    def generate_DFS_maze(self, width: int, height: int,
+                          entry: tuple[int, int], exit: tuple[int, int]) -> Maze:
         """
         Generate and show a maze, using the simple Depth-first search algorithm.
 
@@ -40,4 +41,4 @@ class MazeGenerator():
         #     ...
         # else:
         #     ...
-        return Maze(matrix, width, height)
+        return Maze(matrix, width, height, entry, exit)
