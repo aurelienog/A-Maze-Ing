@@ -27,7 +27,7 @@ def parse_coordinate(value: str) -> tuple[int, int]:
     """
     try:
         x, y = value.split(",")
-        return int(x), int(y)
+        return int(y), int(x)
     except ValueError as e:
         raise ValueError(f"invalid coordinate: '{value}'") from e
 
