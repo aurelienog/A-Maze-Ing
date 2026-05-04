@@ -1,22 +1,31 @@
 from .cell import Direction, Cell
 from .colors import Color
+from .solve import bfs, reconstruct_path
+
+
+class MazeError(Exception):
+    pass
 
 
 class Maze():
     def __init__(self, matrix: list[list[Cell]], width: int, height: int,
-                 entry: tuple[int, int], exit: tuple[int, int]) -> None:
-        self.matrix = matrix
-        self.width = width
-        self.height = height
-        self.entry = entry
-        self.exit = exit
+                 entry: Cell, exit: Cell) -> None:
+        self.matrix: list[list[Cell]] = matrix
+        self.width: int = width
+        self.height: int = height
+        self.entry: Cell = entry
+        self.exit: Cell = exit
+        self.solution_path: list[Cell] = []
 
     def render_cell(self, cell: Cell) -> str:
-        if (cell.row, cell.col) == self.entry:
+        if cell == self.entry:
             return f"{Color.GREEN} E {Color.RESET}"
 
-        elif (cell.row, cell.col) == self.exit:
+        elif cell == self.exit:
             return f"{Color.RED} X {Color.RESET}"
+
+        elif cell in self.solution_path:
+            return f"{Color.PATH_COLOR} o {Color.RESET}"
         return "   "
 
     def __repr__(self) -> str:
@@ -50,3 +59,9 @@ class Maze():
         maze.append(bottom)
 
         return "\n".join(maze)
+
+    def solve_maze(self) -> list[Cell]:
+        came_from: dict[Cell, Cell | None] = bfs(self.matrix, self.entry, self.exit)
+        path = reconstruct_path(came_from, self.exit)
+        self.solution_path = path
+        return path

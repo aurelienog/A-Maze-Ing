@@ -8,10 +8,6 @@ class Direction(Enum):
     LEFT = "left"
 
 
-class CellError(Exception):
-    pass
-
-
 class Cell():
     def __init__(self, row: int, col: int) -> None:
         self.row = row
@@ -48,10 +44,20 @@ class Cell():
         unvisited_neighbors = [n for n in neighbors if not n.visited]
         return unvisited_neighbors
 
+    def get_valid_neighbors(self, matrix: list[list["Cell"]]) -> list["Cell"]:
+        valid = []
+        neighbors = self.get_unvisited_neighbors(matrix)
+        for n in neighbors:
+            direction = self.get_direction(n)
+            if not self.walls[direction]:
+                valid.append(n)
+        return valid
+
     def remove_wall(self, direction: Direction) -> None:
         self.walls[direction] = False
 
     def get_direction(self, next_cell: "Cell") -> Direction:
+        from .maze import MazeError
         if self.col == next_cell.col:
             if self.row > next_cell.row:
                 return Direction.TOP
@@ -63,7 +69,7 @@ class Cell():
             else:
                 return Direction.RIGHT
         else:
-            raise CellError("Error while comparing position")
+            raise MazeError(f"Cells are not neighbors: {self} - {next_cell}")
 
     def connect_cells(self, cell2: "Cell") -> None:
         direction = self.get_direction(cell2)

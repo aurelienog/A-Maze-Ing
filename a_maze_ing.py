@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 from src.validation import ConfigError, Config, get_config
-from src.maze import MazeGenerator
+from src.mazegen import MazeGenerator
 
 
 def read_file(file: str) -> list[str]:
@@ -35,6 +35,7 @@ def main() -> None:
     generator = MazeGenerator()
     maze = generator.generate_DFS_maze(config["WIDTH"], config["HEIGHT"],
                                        config["ENTRY"], config["EXIT"])
+    maze.solve_maze()
     print(maze)
 
 

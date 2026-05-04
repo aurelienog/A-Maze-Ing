@@ -27,6 +27,9 @@ solution = gen.solve()
 
 ## References
 (documentation, articles, tutorials, etc.)
+https://en.wikipedia.org/wiki/Maze_generation_algorithm
+https://rosettacode.org/wiki/Maze_generation
+https://en.wikipedia.org/wiki/Breadth-first_search
 
 ### AI use
 for which tasks and which parts of the project.
