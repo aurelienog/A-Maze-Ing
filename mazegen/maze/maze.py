@@ -125,8 +125,8 @@ class Maze():
             list[tuple[int, int]]: Ordered path from entry to exit.
         """
         parent: dict[tuple[int, int], tuple[int, int] | None] = bfs(self.matrix,
-                                                                       self.entry,
-                                                                       self.exit)
+                                                                    self.entry,
+                                                                    self.exit)
         path = reconstruct_path(parent, self.exit)
         self.solution_path = path
         return path
