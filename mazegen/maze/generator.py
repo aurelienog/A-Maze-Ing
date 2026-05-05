@@ -39,7 +39,7 @@ class MazeGenerator():
         """
         self._validate_inputs(width, height, entry, exit)
         matrix = self._create_matrix(width, height)
-        start = self._random_cell(matrix)
+        start = self.rng.choice(self.rng.choice(matrix))
         self._dfs_build(start, matrix)
 
         return Maze(matrix, width, height, entry, exit)
@@ -120,20 +120,6 @@ class MazeGenerator():
             raise MazeError("Entry or exit coordinates do not match any cell")
 
         return (entry_cell, exit_cell)
-
-    def _random_cell(self, matrix: list[list[Cell]]) -> Cell:
-        """
-        Select a random cell from the matrix.
-
-        Args:
-            matrix (list[list[Cell]]): Maze grid.
-
-        Returns:
-            Cell: Randomly selected cell.
-        """
-        line = self.rng.choice(matrix)
-        current_cell = self.rng.choice(line)
-        return current_cell
 
     def _dfs_build(self, current_cell: Cell, matrix: list[list[Cell]]) -> None:
         """
