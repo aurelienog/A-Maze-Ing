@@ -88,39 +88,6 @@ class MazeGenerator():
                                     for row in range(height)]
         return matrix
 
-    @staticmethod
-    def _find_cells(matrix: list[list[Cell]],
-                    entry: tuple[int, int],
-                    exit: tuple[int, int]) -> tuple[Cell, Cell]:
-        """
-        Locate entry and exit cells in the matrix.
-
-        Args:
-            matrix (list[list[Cell]]): Maze grid.
-            entry (tuple[int, int]): Entry coordinates.
-            exit (tuple[int, int]): Exit coordinates.
-
-        Returns:
-            tuple[Cell, Cell]: Entry cell and exit cell.
-
-        Raises:
-            MazeError: If entry or exit cannot be found.
-        """
-        entry_cell = None
-        exit_cell = None
-
-        for row in matrix:
-            for cell in row:
-                if (cell.row, cell.col) == entry:
-                    entry_cell = cell
-                elif (cell.row, cell.col) == exit:
-                    exit_cell = cell
-
-        if entry_cell is None or exit_cell is None:
-            raise MazeError("Entry or exit coordinates do not match any cell")
-
-        return (entry_cell, exit_cell)
-
     def _dfs_build(self, current_cell: Cell, matrix: list[list[Cell]]) -> None:
         """
         Carve passages in the maze using recursive Depth-first search algorithm.
