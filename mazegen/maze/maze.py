@@ -9,22 +9,23 @@ class MazeError(Exception):
 
 class Maze():
     def __init__(self, matrix: list[list[Cell]], width: int, height: int,
-                 entry: Cell, exit: Cell) -> None:
+                 entry: tuple[int, int], exit: tuple[int, int]) -> None:
         self.matrix: list[list[Cell]] = matrix
         self.width: int = width
         self.height: int = height
-        self.entry: Cell = entry
-        self.exit: Cell = exit
-        self.solution_path: list[Cell] = []
+        self.entry: tuple[int, int] = entry
+        self.exit: tuple[int, int] = exit
+        self.solution_path: list[tuple[int, int]] = []
 
     def render_cell(self, cell: Cell) -> str:
-        if cell == self.entry:
+        coord = (cell.row, cell.col)
+        if coord == self.entry:
             return f"{Color.GREEN} E {Color.RESET}"
 
-        elif cell == self.exit:
+        elif coord == self.exit:
             return f"{Color.RED} X {Color.RESET}"
 
-        elif cell in self.solution_path:
+        elif (cell.row, cell.col) in self.solution_path:
             return f"{Color.PATH_COLOR} * {Color.RESET}"
         return "   "
 
@@ -60,8 +61,10 @@ class Maze():
 
         return "\n".join(maze)
 
-    def solve_maze(self) -> list[Cell]:
-        came_from: dict[Cell, Cell | None] = bfs(self.matrix, self.entry, self.exit)
+    def solve_maze(self) -> list[tuple[int, int]]:
+        came_from: dict[tuple[int, int], tuple[int, int] | None] = bfs(self.matrix,
+                                                                       self.entry,
+                                                                       self.exit)
         path = reconstruct_path(came_from, self.exit)
         self.solution_path = path
         return path

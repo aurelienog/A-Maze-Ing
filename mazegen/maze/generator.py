@@ -4,6 +4,13 @@ import random
 
 
 class MazeGenerator():
+    """
+    Generates mazes using different algorithms.
+
+    Currently supports generation of perfect mazes using
+    Depth-First Search (DFS).
+    """
+
     def __init__(self, seed: int | None = None) -> None:
         self.rng = random.Random(seed)
 
@@ -14,28 +21,47 @@ class MazeGenerator():
             exit: tuple[int, int]
             ) -> Maze:
         """
-        Generate and show a maze, using the simple Depth-first search algorithm.
+        Generate a perfect maze using Depth-First Search (DFS).
 
-        Start at a random cell.
-        Mark the current cell as visited, and get a list of its neighbors. For each
-        neighbor, starting with a randomly selected neighbor:
+        A perfect maze has exactly one unique path between any two cells.
 
-        If that neighbor hasn't been visited, remove the wall between this cell and
-        that neighbor, and then recurse with that neighbor as the current cell.
+        Args:
+            width (int): Number of columns in the maze.
+            height (int): Number of rows in the maze.
+            entry (tuple[int, int]): Coordinates (row, col) of the entry cell.
+            exit (tuple[int, int]): Coordinates (row, col) of the exit cell.
+
+        Returns:
+            Maze: A generated maze instance.
+
+        Raises:
+            MazeError: If dimensions are invalid or entry/exit are incorrect.
         """
         self._validate_inputs(width, height, entry, exit)
         matrix = self._create_matrix(width, height)
-        entry_cell, exit_cell = self._find_cells(matrix, entry, exit)
-        start = self._random_start(matrix)
+        start = self._random_cell(matrix)
         self._dfs_build(start, matrix)
 
-        return Maze(matrix, width, height, entry_cell, exit_cell)
+        return Maze(matrix, width, height, entry, exit)
 
     # ----------------- helpers -----------------
     @staticmethod
     def _validate_inputs(width: int, height: int,
                          entry: tuple[int, int],
                          exit: tuple[int, int]) -> None:
+        """
+        Validate maze dimensions and entry/exit coordinates.
+
+        Args:
+            width (int): Maze width.
+            height (int): Maze height.
+            entry (tuple[int, int]): Entry coordinates.
+            exit (tuple[int, int]): Exit coordinates.
+
+        Raises:
+            MazeError: If dimensions are non-positive, entry equals exit,
+                       or coordinates are out of bounds.
+        """
         if width <= 0 or height <= 0:
             raise MazeError("Invalid maze dimensions")
 
@@ -48,6 +74,16 @@ class MazeGenerator():
 
     @staticmethod
     def _create_matrix(width: int, height: int) -> list[list[Cell]]:
+        """
+        Create a grid (matrix) of cells.
+
+        Args:
+            width (int): Number of columns.
+            height (int): Number of rows.
+
+        Returns:
+            list[list[Cell]]: 2D list of Cell objects.
+        """
         matrix: list[list[Cell]] = [[Cell(row, col) for col in range(width)]
                                     for row in range(height)]
         return matrix
@@ -56,6 +92,20 @@ class MazeGenerator():
     def _find_cells(matrix: list[list[Cell]],
                     entry: tuple[int, int],
                     exit: tuple[int, int]) -> tuple[Cell, Cell]:
+        """
+        Locate entry and exit cells in the matrix.
+
+        Args:
+            matrix (list[list[Cell]]): Maze grid.
+            entry (tuple[int, int]): Entry coordinates.
+            exit (tuple[int, int]): Exit coordinates.
+
+        Returns:
+            tuple[Cell, Cell]: Entry cell and exit cell.
+
+        Raises:
+            MazeError: If entry or exit cannot be found.
+        """
         entry_cell = None
         exit_cell = None
 
@@ -71,12 +121,34 @@ class MazeGenerator():
 
         return (entry_cell, exit_cell)
 
-    def _random_start(self, matrix: list[list[Cell]]) -> Cell:
+    def _random_cell(self, matrix: list[list[Cell]]) -> Cell:
+        """
+        Select a random cell from the matrix.
+
+        Args:
+            matrix (list[list[Cell]]): Maze grid.
+
+        Returns:
+            Cell: Randomly selected cell.
+        """
         line = self.rng.choice(matrix)
         current_cell = self.rng.choice(line)
         return current_cell
 
     def _dfs_build(self, current_cell: Cell, matrix: list[list[Cell]]) -> None:
+        """
+        Carve passages in the maze using recursive Depth-first search algorithm.
+
+        This method visits cells recursively, removing walls between
+        the current cell and randomly chosen unvisited neighbors.
+
+        Args:
+            current_cell (Cell): Current cell being processed.
+            matrix (list[list[Cell]]): Maze grid.
+
+        Returns:
+            None
+        """
         current_cell.visited = True
         unvisited_neighbors = current_cell.get_unvisited_neighbors(matrix)
         self.rng.shuffle(unvisited_neighbors)
