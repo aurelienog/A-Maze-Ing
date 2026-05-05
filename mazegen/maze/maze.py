@@ -25,7 +25,7 @@ class Maze():
             return f"{Color.RED} X {Color.RESET}"
 
         elif cell in self.solution_path:
-            return f"{Color.PATH_COLOR} o {Color.RESET}"
+            return f"{Color.PATH_COLOR} * {Color.RESET}"
         return "   "
 
     def __repr__(self) -> str:
