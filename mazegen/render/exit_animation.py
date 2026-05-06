@@ -97,7 +97,7 @@ def make_frames(base_lines: list[str],
     return frames
 
 
-def exit_animation(delay: float = 0.04) -> None:
+def animate_exit(delay: float = 0.04) -> None:
     base = compose_word(LETTER_E, LETTER_X, LETTER_I, LETTER_T, gap=2)
     base_scaled = scale_horizontal(base, factor=2)
 
@@ -110,4 +110,4 @@ def exit_animation(delay: float = 0.04) -> None:
 
 
 if __name__ == "__main__":
-    exit_animation(delay=0.05)
+    animate_exit(delay=0.05)

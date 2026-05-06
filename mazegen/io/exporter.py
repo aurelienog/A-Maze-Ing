@@ -1,5 +1,5 @@
 from ..maze import Maze
-from .translate import matrix_to_hex, path_to_directions
+from ..render.translate import matrix_to_hex, path_to_directions
 
 
 def export_maze(output_file: str, maze: Maze) -> None:
