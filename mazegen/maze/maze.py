@@ -1,5 +1,4 @@
-from .cell import Direction, Cell
-from .colors import Color
+from .cell import Cell
 from .solve import bfs, reconstruct_path
 
 
@@ -42,75 +41,6 @@ class Maze():
         self.exit: tuple[int, int] = exit
         self.solution_path: list[tuple[int, int]] = []
 
-    def render_cell(self, cell: Cell) -> str:
-        """
-        Render a single cell as a string for maze visualization.
-
-        The cell is styled depending on whether it is:
-        - The entry point (green)
-        - The exit point (red)
-        - Part of the solution path (highlighted color)
-
-        Args:
-            cell: Cell to render.
-
-        Returns:
-            str: Formatted string representation of the cell.
-        """
-        coord = (cell.row, cell.col)
-        if coord == self.entry:
-            return f"{Color.GREEN} E {Color.RESET}"
-
-        elif coord == self.exit:
-            return f"{Color.RED} X {Color.RESET}"
-
-        elif (cell.row, cell.col) in self.solution_path:
-            return f"{Color.PATH_COLOR} * {Color.RESET}"
-        return "   "
-
-    def __repr__(self) -> str:
-        """
-        Generate a string representation of the entire maze.
-
-        The maze is rendered using ASCII characters where:
-        - Walls are shown using '+' and '---'
-        - Paths are spaces
-        - Entry, exit, and solution path are color-highlighted
-
-        Returns:
-            str: Multi-line string representing the maze.
-        """
-        maze: list[str] = []
-
-        for row in self.matrix:
-            top_line = "+"
-            middle_line = ""
-
-            for cell in row:
-                if cell.walls[Direction.TOP]:
-                    top_line += "---+"
-                else:
-                    top_line += "   +"
-
-                if cell.walls[Direction.LEFT]:
-                    middle_line += "|"
-                else:
-                    middle_line += " "
-
-                middle_line += self.render_cell(cell)
-
-            middle_line += "|"
-
-            maze.append(top_line)
-            maze.append(middle_line)
-
-        bottom = "+"
-        for cell in self.matrix[-1]:
-            bottom += "---+"
-        maze.append(bottom)
-
-        return "\n".join(maze)
-
     def solve_maze(self) -> list[tuple[int, int]]:
         """
         Solve the maze using BFS and compute the shortest path from entry to exit.
@@ -124,6 +54,9 @@ class Maze():
         Returns:
             list[tuple[int, int]]: Ordered path from entry to exit.
         """
+        if len(self.solution_path) > 0:
+            return self.solution_path
+
         parent: dict[tuple[int, int], tuple[int, int] | None] = bfs(self.matrix,
                                                                     self.entry,
                                                                     self.exit)

@@ -1,0 +1,13 @@
+valid_command: list[str] = ["1", "2", "3", "4"]
+
+
+def render_menu() -> str:
+    print("\n=== A-MAZE-ING ===")
+    print("1. Re-generate a new maze")
+    print("2. Show/Hide path from entry to exit")
+    print("3. Rotate maze colors")
+    print("4. Quit")
+    command: str = input("Choice? (1-4): ")
+    if command not in valid_command:
+        raise ValueError
+    return command

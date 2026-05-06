@@ -37,12 +37,48 @@ class MazeGenerator():
         Raises:
             MazeError: If dimensions are invalid or entry/exit are incorrect.
         """
+
         self._validate_inputs(width, height, entry, exit)
         matrix = self._create_matrix(width, height)
-        start = self.rng.choice(self.rng.choice(matrix))
+        self._build_42_centered(width, height, matrix)
+        valid_cells = [cell for row in matrix for cell in row if not cell.is42]
+        start = self.rng.choice(valid_cells)
         self._dfs_build(start, matrix)
 
         return Maze(matrix, width, height, entry, exit)
+
+    def generate_imperfect_maze(
+            self,
+            width: int,
+            height: int,
+            entry: tuple[int, int],
+            exit: tuple[int, int],
+            break_prob: float = 0.3
+            ) -> Maze:
+
+        maze = self.generate_perfect_maze(width, height, entry, exit)
+
+        for row in maze.matrix:
+            for cell in row:
+
+                if sum(cell.walls.values()) == 3:
+
+                    if self.rng.random() > break_prob:
+                        continue
+
+                    neighbors = cell.get_neighbors(maze.matrix)
+                    self.rng.shuffle(neighbors)
+
+                    for neighbor in neighbors:
+                        direction = cell.get_direction(neighbor)
+
+                        if not cell.walls[direction]:
+                            continue
+
+                        if sum(neighbor.walls.values()) == 3:
+                            cell.connect_cells(neighbor)
+                            break
+        return maze
 
     # ----------------- helpers -----------------
     @staticmethod
@@ -103,10 +139,51 @@ class MazeGenerator():
             None
         """
         current_cell.visited = True
-        unvisited_neighbors = current_cell.get_unvisited_neighbors(matrix)
+        unvisited_neighbors = [
+            n for n in current_cell.get_neighbors(matrix)
+            if not n.visited and not n.is42
+        ]
         self.rng.shuffle(unvisited_neighbors)
 
         for neighbor in unvisited_neighbors:
             if not neighbor.visited:
                 current_cell.connect_cells(neighbor)
                 self._dfs_build(neighbor, matrix)
+
+    @staticmethod
+    def _define_center(max: int) -> int:
+        if (max % 2) == 0:
+            return (round(max / 2))
+        else:
+            return (round((max - 1) / 2))
+
+    @staticmethod
+    def _draw_line_for_42(start: int, height: int,
+                          matrix: list[list[Cell]]) -> None:
+        for i in range(3):
+            temp: Cell = matrix[height][start + i]
+            temp.is42 = True
+
+    @staticmethod
+    def _draw_column_for_42(start: int, width: int,
+                            matrix: list[list[Cell]]) -> None:
+        for i in range(3):
+            temp: Cell = matrix[start + i][width]
+            temp.is42 = True
+
+    def _build_42_centered(self, width: int, height: int,
+                           matrix: list[list[Cell]]) -> None:
+        middle_height: int = self._define_center(height)
+        middle_width: int = self._define_center(width)
+
+        if width < 9 or height < 9:
+            print("\n[INFO] Maze too small to build 42 pattern")
+            return
+        self._draw_line_for_42(middle_width - 3, middle_height, matrix)
+        self._draw_line_for_42(middle_width + 1, middle_height, matrix)
+        self._draw_line_for_42(middle_width + 1, middle_height - 2, matrix)
+        self._draw_line_for_42(middle_width + 1, middle_height + 2, matrix)
+        self._draw_column_for_42(middle_height, middle_width - 1, matrix)
+        self._draw_column_for_42(middle_height - 2, middle_width + 3, matrix)
+        self._draw_column_for_42(middle_height, middle_width + 1, matrix)
+        self._draw_column_for_42(middle_height - 2, middle_width - 3, matrix)

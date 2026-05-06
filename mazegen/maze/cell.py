@@ -41,6 +41,7 @@ class Cell():
             Direction.LEFT: True
         }
         self.visited = False
+        self.is42 = False
 
     def get_neighbors(self, matrix: list[list["Cell"]]) -> list["Cell"]:
         """
@@ -164,3 +165,7 @@ class Cell():
             case Direction.LEFT:
                 self.remove_wall(Direction.LEFT)
                 cell2.remove_wall(Direction.RIGHT)
+
+    def is_connected(self, cell2: "Cell") -> bool:
+        direction = self.get_direction(cell2)
+        return not self.walls[direction]
