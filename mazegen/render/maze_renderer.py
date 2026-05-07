@@ -1,8 +1,10 @@
-from .colors import Color
+from .colors import ColorPalette
 from ..maze import Cell, Direction, Maze
+import time
 
 
-def render_cell(maze: Maze, cell: Cell, is_path_visible: bool) -> str:
+def render_cell(maze: Maze, cell: Cell, is_path_visible: bool,
+                color: ColorPalette) -> str:
     """
     Render a single cell as a string for maze visualization.
 
@@ -19,20 +21,21 @@ def render_cell(maze: Maze, cell: Cell, is_path_visible: bool) -> str:
     """
     coord = (cell.row, cell.col)
     if coord == maze.entry:
-        return f"{Color.GREEN} E {Color.RESET}"
+        return f"{color.entry} E {color.RESET}"
 
     elif coord == maze.exit:
-        return f"{Color.RED} X {Color.RESET}"
+        return f"{color.exit} X {color.RESET}"
 
     elif is_path_visible and (cell.row, cell.col) in maze.solution_path:
-        return f"{Color.PATH_COLOR} * {Color.RESET}"
+        return f"{color.path_color} * {color.RESET}"
 
     elif cell.is42:
-        return f"{Color.IS42}   {Color.RESET}"
+        return f"{color.is42}   {color.RESET}"
     return "   "
 
 
-def labyrinth_renderer(maze: Maze, is_path_visible: bool = False) -> None:
+def labyrinth_renderer(maze: Maze, maze_colors: ColorPalette,
+                       is_path_visible: bool = False) -> None:
     """
     Generate a string representation of the entire maze.
 
@@ -47,7 +50,7 @@ def labyrinth_renderer(maze: Maze, is_path_visible: bool = False) -> None:
     grid: list[str] = []
 
     for row in maze.matrix:
-        top_line = "+"
+        top_line = f"{maze_colors.walls}+"
         middle_line = ""
 
         for cell in row:
@@ -57,20 +60,24 @@ def labyrinth_renderer(maze: Maze, is_path_visible: bool = False) -> None:
                 top_line += "   +"
 
             if cell.walls[Direction.LEFT]:
-                middle_line += "|"
+                middle_line += f"{maze_colors.walls}|"
             else:
                 middle_line += " "
 
-            middle_line += render_cell(maze, cell, is_path_visible)
+            middle_line += render_cell(maze, cell, is_path_visible, maze_colors)
 
-        middle_line += "|"
+        middle_line += f"{maze_colors.walls}|"
 
         grid.append(top_line)
         grid.append(middle_line)
 
-    bottom = "+"
+    bottom = f"{maze_colors.walls}+"
     for cell in maze.matrix[-1]:
-        bottom += "---+"
+        bottom += f"{maze_colors.walls}---+"
     grid.append(bottom)
-
-    print("\n".join(grid))
+    '\n'.join(grid)
+    for lines in grid:
+        print(f"{lines}{maze_colors.RESET}")
+        if not is_path_visible:
+            time.sleep(0.04)
+    print("seed:", maze.seed)

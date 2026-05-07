@@ -49,7 +49,7 @@ def validate_values(config: dict[str, str]) -> list[str]:
     for key, value in config.items():
 
         if key == "OUTPUT_FILE":
-            if not value.endswith(".txt"):
+            if not value.endswith(".txt") or value == ".txt":
                 errors.append(f"[FORMAT ERROR] {key}='{value}' must be a .txt file")
 
         elif key == "PERFECT":

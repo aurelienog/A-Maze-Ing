@@ -1,5 +1,5 @@
 from .maze import Maze, MazeError
-from .cell import Cell
+from .cell import Cell, Direction
 import random
 
 
@@ -12,6 +12,9 @@ class MazeGenerator():
     """
 
     def __init__(self, seed: int | None = None) -> None:
+        if seed is None:
+            seed = random.randrange(0, 2**32)  # o secrets.randbits(32)
+        self.seed = seed
         self.rng = random.Random(seed)
 
     def generate_perfect_maze(
@@ -45,7 +48,7 @@ class MazeGenerator():
         start = self.rng.choice(valid_cells)
         self._dfs_build(start, matrix)
 
-        return Maze(matrix, width, height, entry, exit)
+        return Maze(matrix, width, height, entry, exit, self.seed)
 
     def generate_imperfect_maze(
             self,
@@ -60,13 +63,15 @@ class MazeGenerator():
 
         for row in maze.matrix:
             for cell in row:
-
-                if sum(cell.walls.values()) == 3:
+                if cell.is42:
+                    continue
+                if sum(cell.walls.values()) >= 2:
 
                     if self.rng.random() > break_prob:
                         continue
 
-                    neighbors = cell.get_neighbors(maze.matrix)
+                    neighbors = [n for n in cell.get_neighbors(maze.matrix)
+                                 if not n.is42]
                     self.rng.shuffle(neighbors)
 
                     for neighbor in neighbors:
@@ -76,8 +81,9 @@ class MazeGenerator():
                             continue
 
                         if sum(neighbor.walls.values()) == 3:
-                            cell.connect_cells(neighbor)
-                            break
+                            if not self.would_create_2x2(cell, neighbor, maze):
+                                cell.connect_cells(neighbor)
+                                break
         return maze
 
     # ----------------- helpers -----------------
@@ -175,9 +181,10 @@ class MazeGenerator():
                            matrix: list[list[Cell]]) -> None:
         middle_height: int = self._define_center(height)
         middle_width: int = self._define_center(width)
-
+        from ..render import ColorPalette
         if width < 9 or height < 9:
-            print("\n[INFO] Maze too small to build 42 pattern")
+            print(f"\n{ColorPalette.YELLOW}[INFO] Maze too small to build 42 pattern"
+                  f"{ColorPalette.RESET}")
             return
         self._draw_line_for_42(middle_width - 3, middle_height, matrix)
         self._draw_line_for_42(middle_width + 1, middle_height, matrix)
@@ -187,3 +194,54 @@ class MazeGenerator():
         self._draw_column_for_42(middle_height - 2, middle_width + 3, matrix)
         self._draw_column_for_42(middle_height, middle_width + 1, matrix)
         self._draw_column_for_42(middle_height - 2, middle_width - 3, matrix)
+
+    @staticmethod
+    def would_create_2x2(cell: Cell, neighbor: Cell, maze: Maze) -> bool:
+
+        # -------------------------
+        # Simular conexión
+        # -------------------------
+        direction = cell.get_direction(neighbor)
+
+        cell.walls[direction] = False
+
+        opposite = {
+            Direction.TOP: Direction.BOTTOM,
+            Direction.BOTTOM: Direction.TOP,
+            Direction.LEFT: Direction.RIGHT,
+            Direction.RIGHT: Direction.LEFT
+        }
+
+        neighbor.walls[opposite[direction]] = False
+
+        # -------------------------
+        # Buscar cualquier 2x2 abierto
+        # -------------------------
+        for r in range(maze.height - 1):
+            for c in range(maze.width - 1):
+
+                A = maze.matrix[r][c]
+                B = maze.matrix[r][c + 1]
+                C = maze.matrix[r + 1][c]
+                D = maze.matrix[r + 1][c + 1]
+
+                if (
+                    A.is_connected(B)
+                    and A.is_connected(C)
+                    and B.is_connected(D)
+                    and C.is_connected(D)
+                ):
+
+                    # restaurar pared
+                    cell.walls[direction] = True
+                    neighbor.walls[opposite[direction]] = True
+
+                    return True
+
+        # -------------------------
+        # Restaurar pared
+        # -------------------------
+        cell.walls[direction] = True
+        neighbor.walls[opposite[direction]] = True
+
+        return False

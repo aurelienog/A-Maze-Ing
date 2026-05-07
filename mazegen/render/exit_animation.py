@@ -49,7 +49,7 @@ LETTER_T = [
 
 
 def compose_word(*letters: list[str], gap: int = 2) -> list[str]:
-    lines = []
+    lines: list[str] = []
     spacer = " " * gap
     for row in range(len(letters[0])):
         lines.append(spacer.join(letter[row] for letter in letters))
@@ -57,9 +57,9 @@ def compose_word(*letters: list[str], gap: int = 2) -> list[str]:
 
 
 def scale_horizontal(lines: list[str], factor: int = 2) -> list[str]:
-    scaled = []
+    scaled: list[str] = []
     for line in lines:
-        new_line = []
+        new_line: list[str] = []
         for ch in line:
             new_line.append(ch * factor)
         scaled.append("".join(new_line))
@@ -69,7 +69,7 @@ def scale_horizontal(lines: list[str], factor: int = 2) -> list[str]:
 def make_frames(base_lines: list[str],
                 max_frames: int = 45,
                 seed: int = 42) -> list[str]:
-    positions = []
+    positions: list[tuple[int, int]] = []
     for y, line in enumerate(base_lines):
         for x, ch in enumerate(line):
             if ch == "█":
@@ -78,7 +78,7 @@ def make_frames(base_lines: list[str],
     rnd = random.Random(seed)
     rnd.shuffle(positions)
 
-    frames = []
+    frames: list[str] = []
     total = len(positions)
     step = max(1, total // (max_frames - 2))
     for k in range(0, total + 1, step):
