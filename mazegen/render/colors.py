@@ -1,5 +1,38 @@
 
 class ColorPalette:
+    """
+    ANSI color palette manager for terminal rendering.
+
+    This class provides a rotating set of foreground and background
+    ANSI escape codes used to visually render different elements of
+    the maze.
+
+    It supports dynamic color cycling to improve visualization variety
+    across different maze generations.
+
+    Attributes:
+        RESET (str):
+            ANSI reset code to clear formatting.
+
+        entry (str):
+            Color used for the entry point.
+
+        exit (str):
+            Color used for the exit point.
+
+        path_color (str):
+            Color used to render the solution path.
+
+        is42 (str):
+            Background color used for special "42" cells.
+
+        walls (str):
+            Color used to render maze walls.
+
+    Internal:
+        index (int):
+            Current color cycle index used for rotation.
+    """
     RESET = "\033[0m"
 
     # foreground
@@ -69,6 +102,25 @@ class ColorPalette:
         ]
 
     def __init__(self) -> None:
+        """
+        Initialize the color palette with a default color set.
+
+        This constructor sets the initial color index and assigns
+        default ANSI colors for all rendering elements:
+
+        - Entry point color
+        - Exit point color
+        - Path color
+        - Special "42" cell background color
+        - Wall color
+
+        The colors are selected from predefined lists and are
+        later rotated using `choose_next_color()` to change the
+        visual theme dynamically.
+
+        Returns:
+            None
+        """
         self.index = 0
         self.entry = self.COLORS[self.index % 14]
         self.exit = self.COLORS[(self.index + 1) % 14]
@@ -77,6 +129,12 @@ class ColorPalette:
         self.walls = self.COLORS[self.index + 6 % 14]
 
     def choose_next_color(self) -> None:
+        """
+        Cycle to the next color set in the palette.
+
+        Increments the internal index and updates all rendering colors
+        so that each call produces a new visual theme.
+        """
         self.index += 1
         self.entry = self.COLORS[self.index % 14]
         self.exit = self.COLORS[(self.index + 1) % 14]

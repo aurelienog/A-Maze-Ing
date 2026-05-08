@@ -23,7 +23,8 @@ class Maze():
         solution_path (list[tuple[int, int]]): Computed path from entry to exit.
     """
     def __init__(self, matrix: list[list[Cell]], width: int, height: int,
-                 entry: tuple[int, int], exit: tuple[int, int], seed: int) -> None:
+                 entry: tuple[int, int], exit: tuple[int, int],
+                 seed: int, algorithm: str) -> None:
         """
         Initialize a Maze instance.
 
@@ -40,6 +41,7 @@ class Maze():
         self.entry: tuple[int, int] = entry
         self.exit: tuple[int, int] = exit
         self.seed: int = seed
+        self.algorithm = algorithm
         self.solution_path: list[tuple[int, int]] = []
 
     def solve_maze(self) -> list[tuple[int, int]]:

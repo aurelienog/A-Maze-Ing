@@ -5,6 +5,27 @@ from mazegen import (Config, ConfigError, MazeError, ColorPalette,
 
 
 def main() -> None:
+    """
+    Entry point of the program.
+
+    Responsibilities:
+    - Validate command-line arguments
+    - Load configuration file
+    - Parse and validate maze configuration
+    - Handle errors gracefully with user-friendly messages
+    - Start the maze application if configuration is valid
+
+    The program expects exactly one argument:
+        config file path (e.g. config.txt)
+
+    Error handling includes:
+    - File system errors (missing file, permissions, OS issues)
+    - Configuration validation errors
+    - Maze generation errors
+
+    Returns:
+        None
+    """
     if len(sys.argv) != 2:
         print(f"{ColorPalette.RED}[ERROR] program must be run with config.txt"
               f"{ColorPalette.RESET}")

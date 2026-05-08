@@ -35,7 +35,8 @@ def render_cell(maze: Maze, cell: Cell, is_path_visible: bool,
 
 
 def labyrinth_renderer(maze: Maze, maze_colors: ColorPalette,
-                       is_path_visible: bool = False) -> None:
+                       is_path_visible: bool = False,
+                       is_instant: bool = False) -> None:
     """
     Generate a string representation of the entire maze.
 
@@ -78,6 +79,7 @@ def labyrinth_renderer(maze: Maze, maze_colors: ColorPalette,
     '\n'.join(grid)
     for lines in grid:
         print(f"{lines}{maze_colors.RESET}")
-        if not is_path_visible:
+        if not is_instant:
             time.sleep(0.04)
-    print("seed:", maze.seed)
+    print("Seed:", maze.seed)
+    print("Generation algorithm:", maze.algorithm)
