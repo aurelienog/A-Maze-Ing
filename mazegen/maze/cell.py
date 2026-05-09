@@ -15,22 +15,26 @@ class Cell():
     """
     Represents a single cell in the maze grid.
 
-    Each cell knows its position, which walls are present,
-    and whether it has been visited during generation or solving.
+    Each cell stores its grid position, wall states,
+    and traversal metadata used during maze generation
+    and solving.
 
     Attributes:
         row (int): Row index of the cell.
         col (int): Column index of the cell.
-        walls (dict[Direction, bool]): Presence of walls in each direction.
-        visited (bool): Whether the cell has been visited.
+        walls (dict[Direction, bool]): Mapping of wall presence
+            for each direction. True means the wall exists.
+        visited (bool): Indicates whether the cell has been visited.
+        is42 (bool): Custom marker flag used by the application.
     """
     def __init__(self, row: int, col: int) -> None:
         """
-        Initialize a cell with all walls present and unvisited state.
+        Initialize a cell with all walls enabled
+        and an unvisited state.
 
         Args:
-            row (int): Row index.
-            col (int): Column index.
+            row (int): Row position in the grid.
+            col (int): Column position in the grid.
         """
         self.row = row
         self.col = col
@@ -45,13 +49,16 @@ class Cell():
 
     def get_neighbors(self, matrix: list[list["Cell"]]) -> list["Cell"]:
         """
-        Retrieve all adjacent neighbors of the cell.
+        Return all orthogonally adjacent cells.
+
+        Neighbors are collected only if they exist inside
+        the grid boundaries.
 
         Args:
-            matrix (list[list[Cell]]): The maze grid.
+            matrix (list[list[Cell]]): Maze grid.
 
         Returns:
-            list[Cell]: List of neighboring cells (up, down, left, right).
+            list[Cell]: Adjacent neighboring cells.
         """
         neighbors = []
         if self.col > 0:
@@ -73,13 +80,13 @@ class Cell():
 
     def get_unvisited_neighbors(self, matrix: list[list["Cell"]]) -> list["Cell"]:
         """
-        Retrieve neighboring cells that have not been visited.
+        Return adjacent neighbors that have not been visited.
 
         Args:
-            matrix (list[list[Cell]]): The maze grid.
+            matrix (list[list[Cell]]): Maze grid.
 
         Returns:
-            list[Cell]: List of unvisited neighboring cells.
+            list[Cell]: Unvisited neighboring cells.
         """
         neighbors = self.get_neighbors(matrix)
         unvisited_neighbors = [n for n in neighbors if not n.visited]
@@ -87,15 +94,16 @@ class Cell():
 
     def get_valid_neighbors(self, matrix: list[list["Cell"]]) -> list["Cell"]:
         """
-        Retrieve neighbors that can be reached (i.e., no wall between them).
+        Return reachable neighboring cells.
 
-        This is typically used during maze solving.
+        A neighbor is considered reachable if there is no wall
+        blocking movement from the current cell toward it.
 
         Args:
-            matrix (list[list[Cell]]): The maze grid.
+            matrix (list[list[Cell]]): Maze grid.
 
         Returns:
-            list[Cell]: List of reachable neighboring cells.
+            list[Cell]: Connected neighboring cells.
         """
         valid = []
         neighbors = self.get_neighbors(matrix)
@@ -107,25 +115,29 @@ class Cell():
 
     def remove_wall(self, direction: Direction) -> None:
         """
-        Remove a wall in the given direction.
+        Remove the wall in the specified direction.
 
         Args:
-            direction (Direction): Direction of the wall to remove.
+            direction (Direction): Wall direction to remove.
         """
         self.walls[direction] = False
 
     def get_direction(self, next_cell: "Cell") -> Direction:
         """
-        Determine the direction of a neighboring cell.
+        Determine the relative direction of another cell.
+
+        Both cells must share either the same row or the same column.
 
         Args:
-            next_cell (Cell): Adjacent cell.
+            next_cell (Cell): Target cell.
 
         Returns:
-            Direction: Direction from the current cell to the next cell.
+            Direction: Direction from the current cell
+            toward the target cell.
 
         Raises:
-            MazeError: If the cells are not adjacent.
+            MazeError: If the cells are not aligned
+                horizontally or vertically.
         """
         from .maze import MazeError
         if self.col == next_cell.col:
@@ -143,13 +155,11 @@ class Cell():
 
     def connect_cells(self, cell2: "Cell") -> None:
         """
-        Remove walls between this cell and another adjacent cell.
+        Create a passage between two adjacent cells
+        by removing the corresponding walls.
 
         Args:
-            cell2 (Cell): Neighboring cell to connect with.
-
-        Raises:
-            MazeError: If the cells are not adjacent.
+            cell2 (Cell): Cell to connect with.
         """
         direction = self.get_direction(cell2)
         match direction:
@@ -167,5 +177,15 @@ class Cell():
                 cell2.remove_wall(Direction.RIGHT)
 
     def is_connected(self, cell2: "Cell") -> bool:
+        """
+        Check whether two adjacent cells are connected.
+
+        Args:
+            cell2 (Cell): Neighboring cell to evaluate.
+
+        Returns:
+            bool: True if there is no wall between the cells,
+            False otherwise.
+        """
         direction = self.get_direction(cell2)
         return not self.walls[direction]
