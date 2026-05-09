@@ -14,12 +14,12 @@ def render_menu() -> str:
     - Validating selected options
     """
     print("\n=== A-MAZE-ING ===")
-    print("1. Re-generate a new maze")
-    print("2. Show/Hide path from entry to exit")
-    print("3. Rotate maze colors")
-    print("4. Enter a seed")
-    print("5. Quit")
-    command: str = input("Choice? (1-5): ")
+    print("1. Generate new maze")
+    print("2. Show / hide solution path")
+    print("3. Rotate color theme")
+    print("4. Generate maze using custom seed")
+    print("5. Exit")
+    command: str = input("\nChoice? (1-5): ")
     if command not in valid_command:
         raise ValueError
     return command
