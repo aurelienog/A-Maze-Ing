@@ -1,9 +1,5 @@
 from ..maze.cell import Cell, Direction
 
-base: list[str] = ["0", "1", "2", "3", "4", "5", "6", "7", "8",
-                        "9", "A", "B", "C", "D", "E", "F"]
-
-
 def cell_to_hex(Cell: Cell) -> str:
     """
     Convert a single maze cell into a hexadecimal character.
@@ -25,6 +21,7 @@ def cell_to_hex(Cell: Cell) -> str:
         str:
             Single hexadecimal character representing the cell state.
     """
+    HEX_DIGITS: str = "0123456789ABCDEF"
     total: int = 0
     if Cell.walls[Direction.TOP]:
         total += 1
@@ -34,7 +31,7 @@ def cell_to_hex(Cell: Cell) -> str:
         total += 4
     if Cell.walls[Direction.LEFT]:
         total += 8
-    return (base[total])
+    return (HEX_DIGITS[total])
 
 
 def matrix_to_hex(matrix: list[list[Cell]]) -> str:
