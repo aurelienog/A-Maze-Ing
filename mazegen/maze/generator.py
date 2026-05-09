@@ -407,27 +407,32 @@ class MazeGenerator():
 
         return False
 
-    def get_visited_neighbor(self, current_cell: Cell,
-                             matrix: list[list[Cell]]) -> Cell | None:
+    def get_visited_neighbor(
+        self,
+        current_cell: Cell,
+        matrix: list[list[Cell]]
+    ) -> Cell | None:
         """
-        Select a random visited neighbor of a cell.
+            Select a random visited neighbor of a cell.
 
-        Args:
-            current_cell (Cell):
-                Current cell.
+            Args:
+                current_cell (Cell):
+                    Current cell.
 
-            matrix (list[list[Cell]]):
-                Maze matrix.
+                matrix (list[list[Cell]]):
+                    Maze matrix.
 
-        Returns:
-            Cell | None:
-                Random visited neighbor if available,
-                otherwise None.
-        """
-        possibilities: list[Cell] = list(set(current_cell.get_neighbors(matrix))
-                                         - set(current_cell.get_unvisited_neighbors(
-                                             matrix)))
+            Returns:
+                Cell | None:
+                    Random visited neighbor if available,
+                    otherwise None.
+            """
+        possibilities = [
+            n for n in current_cell.get_neighbors(matrix)
+            if n.visited and not n.is42
+        ]
+
         if not possibilities:
             return None
-        result = self.rng.choice(possibilities)
-        return result
+
+        return self.rng.choice(possibilities)
