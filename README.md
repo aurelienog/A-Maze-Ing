@@ -4,6 +4,8 @@ This project has been created as part of the 42 curriculum by aunoguei, ppousser
 
 > *This is the way.*
 
+## Description
+
 The project focuses on algorithmic maze generation, pathfinding, ASCII rendering, and export systems while maintaining a clean and extensible architecture.
 
 The architecture was intentionally designed to keep generation, solving, rendering, and export logic fully independent and reusable.
@@ -139,7 +141,7 @@ This separation allows algorithms, rendering systems, and export formats to evol
 
 ---
 
-## Installation
+## Instructions
 
 ### Requirements
 
