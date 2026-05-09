@@ -80,6 +80,7 @@ def run_maze_app(config: Config) -> None:
     maze: Maze = build_and_solve_maze(config)
     maze_colors = ColorPalette()
     labyrinth_renderer(maze, maze_colors, is_path_visible)
+    export_maze(config["OUTPUT_FILE"], maze)
 
     while True:
         try:
