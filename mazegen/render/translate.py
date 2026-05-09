@@ -1,37 +1,38 @@
 from ..maze.cell import Cell, Direction
 
-def cell_to_hex(Cell: Cell) -> str:
+HEX_DIGITS: str = "0123456789ABCDEF"
+
+
+def cell_to_hex(cell: Cell) -> str:
     """
     Convert a single maze cell into a hexadecimal character.
 
-    Each wall of the cell is encoded as a bit:
+    Each wall is encoded as a bit mask:
+
         TOP    = 1
         RIGHT  = 2
         BOTTOM = 4
         LEFT   = 8
 
-    The sum of active walls is used as an index in a hexadecimal
-    lookup table (0-F).
+    The resulting value is converted into its hexadecimal
+    representation.
 
     Args:
-        Cell (Cell):
-            Maze cell to convert.
+        cell (Cell): Maze cell to convert.
 
     Returns:
-        str:
-            Single hexadecimal character representing the cell state.
+        str: Hexadecimal representation of the cell.
     """
-    HEX_DIGITS: str = "0123456789ABCDEF"
     total: int = 0
-    if Cell.walls[Direction.TOP]:
+    if cell.walls[Direction.TOP]:
         total += 1
-    if Cell.walls[Direction.RIGHT]:
+    if cell.walls[Direction.RIGHT]:
         total += 2
-    if Cell.walls[Direction.BOTTOM]:
+    if cell.walls[Direction.BOTTOM]:
         total += 4
-    if Cell.walls[Direction.LEFT]:
+    if cell.walls[Direction.LEFT]:
         total += 8
-    return (HEX_DIGITS[total])
+    return HEX_DIGITS[total]
 
 
 def matrix_to_hex(matrix: list[list[Cell]]) -> str:
@@ -91,4 +92,4 @@ def path_to_directions(path: list[tuple[int, int]]) -> str:
         elif dx == -1:
             result += "E"
 
-    return (result)
+    return result

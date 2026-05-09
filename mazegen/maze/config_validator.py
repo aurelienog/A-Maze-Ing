@@ -3,6 +3,22 @@ from .maze import MazeError
 
 
 def validate_maze_config(config: Config) -> list[str]:
+    """
+    Validate maze configuration values.
+
+    The function checks maze dimensions and verifies that
+    entry and exit coordinates are valid and distinct.
+
+    Args:
+        config (Config): Maze configuration dictionary.
+
+    Returns:
+        list[str]: Empty list if the configuration is valid.
+
+    Raises:
+        MazeError: If one or more configuration values are invalid.
+            The exception message contains all validation errors.
+    """
     errors: list[str] = []
 
     if config["WIDTH"] <= 0:

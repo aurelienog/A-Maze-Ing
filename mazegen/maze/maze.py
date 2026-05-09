@@ -3,37 +3,46 @@ from .solve import bfs, reconstruct_path
 
 
 class MazeError(Exception):
+    """
+    Exception raised for maze generation, validation,
+    or solving related errors.
+    """
     pass
 
 
 class Maze():
     """
-    Represents a maze grid with a start and end point, and supports solving
-    and rendering the maze.
+    Represents a maze composed of interconnected cells.
 
-    The maze is composed of Cell objects arranged in a 2D grid, where each
-    cell contains walls and can be traversed depending on those walls.
+    The maze stores a 2D grid of Cell objects together with
+    metadata such as dimensions, entry/exit points,
+    generation settings, and cached solution paths.
 
     Attributes:
-        matrix (list[list[Cell]]): 2D grid of cells representing the maze.
+        matrix (list[list[Cell]]): 2D grid representing the maze.
         width (int): Number of columns in the maze.
         height (int): Number of rows in the maze.
-        entry (tuple[int, int]): Coordinates (row, col) of the entry point.
-        exit (tuple[int, int]): Coordinates (row, col) of the exit point.
-        solution_path (list[tuple[int, int]]): Computed path from entry to exit.
+        entry (tuple[int, int]): Entry coordinates as (row, col).
+        exit (tuple[int, int]): Exit coordinates as (row, col).
+        seed (int): Random seed used during maze generation.
+        algorithm (str): Name of the generation algorithm used.
+        solution_path (list[tuple[int, int]]): Cached solution path
+            from entry to exit.
     """
     def __init__(self, matrix: list[list[Cell]], width: int, height: int,
                  entry: tuple[int, int], exit: tuple[int, int],
                  seed: int, algorithm: str) -> None:
         """
-        Initialize a Maze instance.
+        Initialize a maze instance.
 
         Args:
-            matrix: 2D grid of Cell objects.
-            width: Number of columns.
-            height: Number of rows.
-            entry: Starting coordinate (row, col).
-            exit: Goal coordinate (row, col).
+            matrix (list[list[Cell]]): Maze cell grid.
+            width (int): Number of columns.
+            height (int): Number of rows.
+            entry (tuple[int, int]): Entry coordinates (row, col).
+            exit (tuple[int, int]): Exit coordinates (row, col).
+            seed (int): Random seed used for generation.
+            algorithm (str): Generation algorithm identifier.
         """
         self.matrix: list[list[Cell]] = matrix
         self.width: int = width
@@ -46,16 +55,15 @@ class Maze():
 
     def solve_maze(self) -> list[tuple[int, int]]:
         """
-        Solve the maze using BFS and compute the shortest path from entry to exit.
+        Compute and cache a path from entry to exit.
 
-        The algorithm uses a BFS traversal on the maze grid and reconstructs
-        the path using a backtracking map of coordinates.
-
-        Side effects:
-            Updates self.solution_path with the computed path.
+        The maze is solved using a breadth-first search traversal,
+        ensuring the returned path is the shortest path in terms
+        of movement steps.
 
         Returns:
-            list[tuple[int, int]]: Ordered path from entry to exit.
+            list[tuple[int, int]]: Ordered coordinates representing
+            the path from entry to exit.
         """
         if len(self.solution_path) > 0:
             return self.solution_path
