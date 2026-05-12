@@ -65,8 +65,6 @@ class Maze():
             list[tuple[int, int]]: Ordered coordinates representing
             the path from entry to exit.
         """
-        if len(self.solution_path) > 0:
-            return self.solution_path
 
         parent: dict[tuple[int, int], tuple[int, int] | None] = bfs(self.matrix,
                                                                     self.entry,

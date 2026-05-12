@@ -6,9 +6,7 @@ This project has been created as part of the 42 curriculum by aunoguei, ppousser
 
 ## Description
 
-A-Maze-ing is a modular maze generation and solving engine written in Python.
-
-The project explores procedural generation, terminal rendering, and reusable software design through the implementation of a fully configurable maze system.
+A-Maze-ing is a modular Python maze generator and solver built to explore procedural generation and terminal-based visualization.
 
 The application supports:
 
@@ -360,20 +358,23 @@ mazegen-1.0.0-py3-none-any.whl
 
 Build the package locally:
 ```
-make build
+python3 -m build
 ```
 This generates distributable package files inside:
 ```
 dist/
 ```
-
+To install:
+```
+pip install dist/mazegen-0.1.0-py3-none-any.whl
+```
 ---
 
 #### Using the Maze Generator
 
 Importing the package
 ```
-from mazegen.maze import MazeGenerator
+from mazegen import MazeGenerator
 ```
 
 ---
@@ -438,7 +439,19 @@ The shortest path is computed using Breadth-First Search (BFS).
 
 #### Example
 ```
-from mazegen.maze import MazeGenerator
+from mazegen import MazeGenerator, labyrinth_renderer
+
+generator = MazeGenerator()
+
+maze = generator.generate_imperfect_maze(
+    width=20,
+    height=15,
+    entry=(0, 0),
+    exit=(14, 19),
+)
+
+maze.solve_maze()
+labyrinth_renderer(maze)
 
 generator = MazeGenerator(seed=42)
 
@@ -449,10 +462,7 @@ maze = generator.generate_perfect_maze(
     exit=(14, 19)
 )
 
-maze.solve_maze()
-
-print("Maze generated with seed:", maze.seed)
-print("Path length:", len(maze.solution))
+labyrinth_renderer(maze)
 ```
 ---
 

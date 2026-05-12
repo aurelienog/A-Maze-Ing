@@ -34,7 +34,7 @@ def render_cell(maze: Maze, cell: Cell, is_path_visible: bool,
     return "   "
 
 
-def labyrinth_renderer(maze: Maze, maze_colors: ColorPalette,
+def labyrinth_renderer(maze: Maze, maze_colors: ColorPalette = ColorPalette(),
                        is_path_visible: bool = False,
                        is_instant: bool = False) -> None:
     """

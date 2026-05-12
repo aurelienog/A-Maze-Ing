@@ -9,7 +9,7 @@ LINTFLAGS = --warn-return-any --warn-unused-ignores --ignore-missing-imports --d
 # DEFAULT
 # --------------------------
 
-all: install run
+all: install
 
 # --------------------------
 # VENV
@@ -31,10 +31,10 @@ install: venv
 # --------------------------
 
 run:
-	PYTHONPATH= $(PYTHON) -m $(NAME) config.txt
+	PYTHONPATH=. $(PYTHON) -m $(NAME) config.txt
 
 debug:
-	PYTHONPATH= $(PYTHON) -m pdb -m $(NAME) config.txt
+	PYTHONPATH=. $(PYTHON) -m pdb -m $(NAME) config.txt
 
 
 # --------------------------
@@ -43,6 +43,7 @@ debug:
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
+	find . -type d -name ".pytest_cache" -exec rm -rf {} +
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
 	find . -type d -name "*.egg-info" -exec rm -rf {} +
 
@@ -62,11 +63,11 @@ lint-strict:
 	$(VENV)/bin/mypy . $(LINTFLAGS) --strict
 
 # --------------------------
-# BUILD (IMPORTANT)
+# BUILD
 # --------------------------
 
-build:
-	$(PIP) install build
+build: install
+	$(PYTHON) -m pip install --upgrade build
 	$(PYTHON) -m build
 
 # --------------------------

@@ -3,7 +3,7 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mazegen-a_maze_ing"
+name = "mazegen"
 version = "0.1.0"
 description = "Maze generator"
 authors = [
@@ -11,3 +11,7 @@ authors = [
     { name = "ppousser" }
 ]
 requires-python = ">=3.11"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["mazegen*"]

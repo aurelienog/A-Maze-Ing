@@ -81,7 +81,11 @@ class MazeGenerator():
         else:
             self._prim_build(start, matrix)
 
-        return Maze(matrix, width, height, entry, exit, self.seed, builder)
+        maze = Maze(matrix, width, height, entry, exit, self.seed, builder)
+        if not maze.solve_maze():
+            maze = self.generate_perfect_maze(width, height, entry, exit, algorithm)
+
+        return maze
 
     def generate_imperfect_maze(
             self,
@@ -238,13 +242,18 @@ class MazeGenerator():
         """
         current_cell.visited = True
         frontier: list[Cell] = current_cell.get_unvisited_neighbors(matrix)
+
         while frontier:
             current_cell = self.rng.choice(frontier)
             frontier.remove(current_cell)
-            current_cell.visited = True
+
             neighbor: Cell | None = self.get_visited_neighbor(current_cell, matrix)
+
             if neighbor:
                 current_cell.connect_cells(neighbor)
+
+            current_cell.visited = True
+
             for cell in current_cell.get_unvisited_neighbors(matrix):
                 if not cell.visited and cell not in frontier and not cell.is42:
                     frontier.append(cell)
