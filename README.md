@@ -1,4 +1,4 @@
-This project has been created as part of the 42 curriculum by aunoguei, ppousser.
+*This project has been created as part of the 42 curriculum by aunoguei, ppousser.*
 
 # A-Maze-ing
 
